@@ -30,7 +30,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Friend::class);
     }
-    
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

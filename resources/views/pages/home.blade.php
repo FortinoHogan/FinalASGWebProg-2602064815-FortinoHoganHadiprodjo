@@ -1,12 +1,19 @@
 @extends('layouts.master')
 
 @section('content')
+    <style>
+        @media (max-width: 460px) {
+            #search {
+                width: 200px !important;
+            }
+        }
+    </style>
     <div class="d-flex align-items-center justify-content-end mb-5 gap-3">
         <div class="d-flex justify-content-end">
             <form action="" class="position-relative">
                 <input class="form-control form-control-sm border-2 border-secondary rounded-2" type="text" name="search"
-                    placeholder="Search" value="{{ request('search') }}"
-                    style="width: 300px; padding-left: 15px; height: 50px">
+                    placeholder="Search" value="{{ request('search') }}" style="width: 300px; padding-left: 15px; height: 50px"
+                    id="search">
                 <input type="hidden" name="filter" value="{{ request('filter') }}">
                 <button type="submit" class="position-absolute top-50 end-0 translate-middle-y btn btn-outline-secondary">
                     <svg class="text-muted" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.966 56.966" width="25px"
@@ -23,7 +30,8 @@
                 data-bs-toggle="dropdown" aria-expanded="false">
             </i>
 
-            <div class="dropdown-menu dropdown-menu-end p-3 shadow" aria-labelledby="filterDropdownToggle" style="width: 300px">
+            <div class="dropdown-menu dropdown-menu-end p-3 shadow" aria-labelledby="filterDropdownToggle"
+                style="width: 300px">
                 <form action="">
                     <div class="mb-3">
                         <label class="form-label">@lang('lang.gender')</label>
@@ -45,7 +53,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="{{ $field->name }}"
                                     id="field{{ $field->id }}" name="field[]"
-                                    {{ in_array(($field->name), request('field', [])) ? 'checked' : '' }}>
+                                    {{ in_array($field->name, request('field', [])) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="field{{ $field->id }}">{{ $field->name }}</label>
                             </div>
                         @endforeach
@@ -62,7 +70,7 @@
         class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-4 mb-md-8 gap-4 d-flex justify-content-around">
         @foreach ($users as $u)
             @if (!Auth::check())
-                <div class="card col" style="width: 16rem;">
+                <a href="{{ route('login') }}" class="card col text-decoration-none" style="width: 16rem;">
                     <img src="{{ $u->profile_picture ?? asset('assets/img/profile.png') }}"
                         class="card-img-top cursor-pointer" alt="...">
                     <div class="card-body">
@@ -75,7 +83,7 @@
                             <i class="fa-regular fa-thumbs-up" style="font-size: 1.5rem; cursor: pointer;"></i>
                         </div>
                     </div>
-                </div>
+                </a>
             @elseif ($u->id != auth()->user()->id)
                 <div class="card col" style="width: 16rem;">
                     <img src="{{ $u->profile_picture ?? asset('assets/img/profile.png') }}"
@@ -87,14 +95,38 @@
                             <p class="mb-1">{{ $uf->fieldOfWork->name }}</p>
                         @endforeach
                         <div class="d-flex justify-content-end">
-                            @if (Auth::user()->friends()->where('friend_id', $u->id)->where('status', 'accepted')->exists() ||
-                                    Auth::user()->friends()->where('user_id', $u->id)->where('status', 'accepted')->exists())
-                                <i class="fa-solid fa-thumbs-up" style="font-size: 1.5rem; cursor: pointer;"></i>
-                            @elseif (Auth::user()->friends()->where('friend_id', $u->id)->where('status', 'pending')->exists() ||
-                                    Auth::user()->friends()->where('user_id', $u->id)->where('status', 'pending')->exists())
-                                <i class="fa-regular fa-clock" style="font-size: 1.5rem; cursor: pointer;"></i>
+                            @if (
+                                $friends->contains(function ($friend) use ($u) {
+                                    return ($friend->user_id == $u->id || $friend->friend_id == $u->id) && $friend->status == 'accepted';
+                                }))
+                                <form action="{{ route('friends.remove', $u->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                        <i class="fa-solid fa-thumbs-up" style="font-size: 1.5rem;"></i>
+                                    </button>
+                                </form>
+                            @elseif (
+                                $friends->contains(function ($friend) use ($u) {
+                                    return ($friend->user_id == $u->id || $friend->friend_id == $u->id) &&
+                                        $friend->status == 'pending' &&
+                                        $friend->sender_id == Auth::user()->id;
+                                }))
+                                <form action="{{ route('friends.remove', $u->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                        <i class="fa-regular fa-clock" style="font-size: 1.5rem;"></i>
+                                    </button>
+                                </form>
                             @else
-                                <i class="fa-regular fa-thumbs-up" style="font-size: 1.5rem; cursor: pointer;"></i>
+                                <form action="{{ route('friends.add', $u->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    <button type="submit" style="background: none; border: none; cursor: pointer;">
+                                        <i class="fa-regular fa-thumbs-up" style="font-size: 1.5rem;"></i>
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     </div>
@@ -105,6 +137,9 @@
     <div class="d-flex justify-content-center">
         {{ $users->links() }}
     </div>
+    <a href="{{ route('chat') }}" class="bg-white position-fixed p-3 shadow-lg" style="border-radius: 100%; bottom: 20px; right: 20px; cursor: pointer;">
+        <i class="fa-regular fa-comments" style="font-size: 1.5rem;"></i>
+    </a>
 @endsection
 
 @section('scripts')

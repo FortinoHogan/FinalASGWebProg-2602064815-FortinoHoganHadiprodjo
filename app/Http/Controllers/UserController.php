@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\FieldOfWork;
+use App\Models\Friend;
+use App\Models\Notification;
 use App\Models\Profession;
 use App\Models\User;
 use App\Models\UserField;
@@ -61,7 +63,18 @@ class UserController extends Controller
 
         $fields = FieldOfWork::get();
 
-        return view('pages.home', compact('users', 'fields'));
+        if (Auth::check()) {
+            $notifications = Notification::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+            $user = Auth::user();
+
+            $friendA = Friend::where('user_id', $user->id)->get();
+            $friendB = Friend::where('friend_id', $user->id)->get();
+
+            $friends = $friendA->merge($friendB);
+            return view('pages.home', compact('users', 'fields', 'notifications', 'friends'));
+        } else {
+            return view('pages.home', compact('users', 'fields'));
+        }
     }
 
     public function login()
@@ -214,6 +227,29 @@ class UserController extends Controller
     public function profile()
     {
         $user = Auth::user();
-        return view('pages.profile', compact('user'));
+
+
+        $a = Friend::where('user_id', $user->id)
+            ->where('status', 'accepted');
+
+        $b = Friend::where('friend_id', $user->id)
+            ->where('status', 'accepted');
+
+        $friendsCount = $a->union($b)->count();
+
+        $notifications = Notification::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        return view('pages.profile', compact('user', 'notifications', 'friendsCount'));
+    }
+
+    public function mark_as_read($id)
+    {
+        $notification = Notification::findOrFail($id);
+
+        if ($notification->user_id == Auth::user()->id) {
+            $notification->update(['is_read' => true]);
+            return response()->json(['message' => 'Notification marked as read.'], 200);
+        }
+
+        return response()->json(['message' => 'Unauthorized.'], 403);
     }
 }

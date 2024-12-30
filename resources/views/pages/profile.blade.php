@@ -13,7 +13,7 @@
             <div>
                 <h3 class="">{{ $user->name }}</h3>
                 <h6>{{ $user->profession->name }}</h6>
-                <a href="">{{ $user->friends()->where('status', 'accepted')->count() }} @lang('lang.friends')</a>
+                <a href="{{ route('friends') }}">{{ $friendsCount }} @lang('lang.friends')</a>
             </div>
             <div>
                 @foreach ($user->userFields as $uf)
@@ -25,4 +25,7 @@
             <a href="{{ route('logout') }}" class="btn btn-danger">@lang('lang.logout')</a>
         </div>
     </div>
+    <a href="{{ route('chat') }}" class="bg-white position-fixed p-3 shadow-lg" style="border-radius: 100%; bottom: 20px; right: 20px; cursor: pointer;">
+        <i class="fa-regular fa-comments" style="font-size: 1.5rem;"></i>
+    </a>
 @endsection

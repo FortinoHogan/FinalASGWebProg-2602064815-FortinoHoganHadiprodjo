@@ -14,9 +14,13 @@ class CekAuth
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $role): Response
     {
-        if (Auth::check()) {
+        if ($role === 'guest' && Auth::check()) {
+            return redirect()->route('home');
+        }
+
+        if ($role === 'auth' && !Auth::check()) {
             return redirect()->route('home');
         }
 

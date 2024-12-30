@@ -4,6 +4,11 @@
         align-items: center;
     }
 
+    .scrollbar-hidden::-webkit-scrollbar {
+        width: 0;
+        display: none;
+    }
+
     @media (max-width: 992px) {
         #navbar-nav {
             flex-direction: column;
@@ -26,8 +31,60 @@
                     <a class="nav-link text-light" href={{ route('home') }}>@lang('lang.home')</a>
                 </li>
                 @if (Auth::check())
-                    <li class="nav-item">
-                        <a class="nav-link text-light" href="#">@lang('lang.notification')</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-light" href="#" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            @lang('lang.notification')
+                        </a>
+                        <ul class="dropdown-menu scrollbar-hidden" style="max-height: 400px; overflow-y: auto;">
+                            @forelse ($notifications as $notification)
+                                @if ($notification->type == 'friend_request')
+                                    <li>
+                                        <a class="dropdown-item {{ $notification->is_read ? 'text-muted' : 'text-black' }} d-flex  gap-2"
+                                            href="{{ route('friends') }}" onclick="markAsRead({{ $notification->id }})">
+                                            <img src="{{ $notification->sender->profile_picture ?? asset('assets/img/profile.png') }}"
+                                                alt=""
+                                                style="width: 50px; border-radius: 100%; border: 2px solid; padding: 5px">
+                                            <div class="d-flex flex-column gap-0">
+                                                <p class="mb-0">
+                                                    {{ $notification->sender->name }}
+                                                </p>
+                                                <p class="mb-0">
+                                                    @lang('lang.friend_request_notification')
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                @else
+                                    <li>
+                                        <a class="dropdown-item {{ $notification->is_read ? 'text-muted' : '' }} d-flex  gap-2"
+                                            href="#" onclick="markAsRead({{ $notification->id }})">
+                                            <img src="{{ $notification->sender->profile_picture ?? asset('assets/img/profile.png') }}"
+                                                alt=""
+                                                style="width: 50px; border-radius: 100%; border: 2px solid; padding: 5px">
+                                            <div class="d-flex flex-column gap-0">
+                                                <p class="mb-0">
+                                                    {{ $notification->sender->name }}
+                                                </p>
+                                                <p class="mb-0">
+                                                    {{ Str::limit($notification->content, 20, '...') }}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                @endif
+                            @empty
+                                <li>
+                                    <p class="dropdown-item mb-0">@lang('lang.no_notification')</p>
+                                </li>
+                            @endforelse
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" href="#">@lang('lang.topup')</a>
@@ -128,3 +185,22 @@
         </div>
     </div>
 </nav>
+
+<script>
+    function markAsRead(notificationId) {
+        fetch(`/notifications/${notificationId}/mark-as-read`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.querySelector(`[onclick="markAsRead(${notificationId})"]`)
+                        .classList.add('text-muted');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>

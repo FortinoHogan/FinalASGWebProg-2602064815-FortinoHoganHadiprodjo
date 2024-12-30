@@ -13,10 +13,10 @@ class NotificationSeeder extends Seeder
      */
     public function run(): void
     {
-        Notification::create([
-            'user_id' => 1,
-            'title' => 'Hello',
-            'content' => 'Hello test',
-        ]);
+        // Notification::create([
+        //     'user_id' => 1,
+        //     'title' => 'Hello',
+        //     'content' => 'Hello test',
+        // ]);
     }
 }
