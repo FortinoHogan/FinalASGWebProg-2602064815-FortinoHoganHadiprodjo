@@ -25,6 +25,8 @@ Route::middleware(['CekAuth:auth'])->group(function () {
     Route::post('/friends/add/{user}', [FriendController::class, 'add_friend'])->name('friends.add');
     Route::post('/friends/remove/{user}', [FriendController::class, 'remove_friend'])->name('friends.remove');
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::get('/messages/{friendId}', [ChatController::class, 'get_messages'])->name('messages.get');
+    Route::post('/messages/{friendId}', [ChatController::class, 'send_message'])->name('messages.send');
 });
 
 Route::get('/set-locale/{locale}', function ($locale) {
