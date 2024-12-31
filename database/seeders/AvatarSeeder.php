@@ -22,9 +22,19 @@ class AvatarSeeder extends Seeder
             'profile-3.png',
         ];
 
-        foreach ($images as $image) {
+        $prices = [
+            0,
+            0,
+            0,
+            50,
+            1000,
+            100000
+        ];
+
+        for ($i = 0; $i < count($images); $i++) {
             Avatar::create([
-                'image' => file_get_contents(public_path('assets/img/' . $image)),
+                'image' => file_get_contents(public_path('assets/img/' . $images[$i])),
+                'price' => $prices[$i],
             ]);
         }
     }

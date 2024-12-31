@@ -43,6 +43,8 @@ return [
     'apply_filter' => 'Apply Filter',
     'home' => 'Home',
     'topup' => 'Top Up',
+    'add_coin' => 'Add 100 Coin',
+    'your_coin' => 'Your Coin',
     'notification' => 'Notification',
     'no_notification' => 'No Notification',
     'friend_request_notification' => 'sends you a friend request',
@@ -54,5 +56,7 @@ return [
     'profile' => 'Profile',
     'friends' => 'Friends',
     'done' => 'Done',
+    'change_profile_picture' => 'Change Profile Picture',
+    'remove_profile' => 'Remove Profile',
     'logout' => 'Logout',
 ];

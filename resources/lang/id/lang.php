@@ -43,6 +43,8 @@ return [
     'apply_filter' => 'Terapkan Filter',
     'home' => 'Beranda',
     'topup' => 'Isi Ulang',
+    'add_coin' => 'Tambah 100 Coin',
+    'your_coin' => 'Coin Anda',
     'notification' => 'Notifikasi',
     'no_notification' => 'Tidak ada notifikasi',
     'friend_request_notification' => 'mengirim anda permintaan pertemanan',
@@ -54,5 +56,7 @@ return [
     'profile' => 'Profil',
     'friends' => 'Pertemanan',
     'done' => 'Selesai',
+    'change_profile_picture' => 'Ubah Foto Profil',
+    'remove_profile' => 'Hapus Profil',
     'logout' => 'Keluar',
 ];

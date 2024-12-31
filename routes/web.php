@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\CoinController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +29,11 @@ Route::middleware(['CekAuth:auth'])->group(function () {
     Route::get('/chat', [ChatController::class, 'index'])->name('chat');
     Route::get('/messages/{friendId}', [ChatController::class, 'get_messages'])->name('messages.get');
     Route::post('/messages/{friendId}', [ChatController::class, 'send_message'])->name('messages.send');
+    Route::get('/topup', [CoinController::class, 'index'])->name('topup');
+    Route::get('/add-coin', [CoinController::class, 'add_coin'])->name('add-coin');
+    Route::get('/avatar', [AvatarController::class, 'index'])->name('avatar');
+    Route::get('/avatar/purchase/{avatar_id}', [AvatarController::class, 'purchase'])->name('avatar.purchase');
+    Route::get('/remove-profile', [AvatarController::class, 'remove_profile'])->name('remove-profile');
 });
 
 Route::get('/set-locale/{locale}', function ($locale) {

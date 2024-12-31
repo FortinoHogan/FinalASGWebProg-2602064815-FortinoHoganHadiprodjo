@@ -87,10 +87,10 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href="#">@lang('lang.topup')</a>
+                        <a class="nav-link text-light" href="{{ route('topup') }}">@lang('lang.topup')</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light" href='profile'>@lang('lang.profile')</a>
+                        <a class="nav-link text-light" href='{{ route('profile') }}'>@lang('lang.profile')</a>
                     </li>
                 @else
                     <li class="nav-item">
