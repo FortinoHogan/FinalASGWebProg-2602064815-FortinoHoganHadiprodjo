@@ -14,9 +14,13 @@
                     class="d-flex align-items-center gap-3 text-decoration-none text-black friend-link"
                     data-id="{{ $friend->user_id == auth()->user()->id ? $friend->friend->id : $friend->user->id }}">
                     <img src="{{ $friend->user_id == auth()->user()->id
-                        ? $friend->friend->profile_picture ?? asset('assets/img/profile.png')
-                        : $friend->user->profile_picture ?? asset('assets/img/profile.png') }}"
-                        alt="" style="width: 50px; border-radius: 100%; border: 2px solid; padding: 5px">
+                        ? ($friend->friend->profile_picture
+                            ? 'data:image/jpeg;base64,' . base64_encode($friend->friend->profile_picture)
+                            : asset('assets/img/profile.png'))
+                        : ($friend->user->profile_picture
+                            ? 'data:image/jpeg;base64,' . base64_encode($friend->user->profile_picture)
+                            : asset('assets/img/profile.png')) }}"
+                        alt="" style="width: 50px; height: 50px; border-radius: 100%; border: 2px solid; padding: 5px; object-fit: scale-down; object-position: top"">
                     <p class="mb-0">
                         {{ $friend->user_id == auth()->user()->id ? $friend->friend->name : $friend->user->name }}
                     </p>
@@ -26,8 +30,8 @@
         </div>
 
         <div class="w-75 p-3">
-            <div id="chat-box"
-                class="scrollbar-hidden" style="border: 1px solid black; min-height: 90vh; padding: 15px; overflow-y: auto; max-height: 90vh;">
+            <div id="chat-box" class="scrollbar-hidden"
+                style="border: 1px solid black; min-height: 90vh; padding: 15px; overflow-y: auto; max-height: 90vh;">
                 <p class="text-muted text-center">@lang('lang.select_chat')</p>
             </div>
             <form id="send-message-form" method="POST" class="mt-2 d-flex align-items-center">
