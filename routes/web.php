@@ -34,6 +34,7 @@ Route::middleware(['CekAuth:auth'])->group(function () {
     Route::get('/avatar', [AvatarController::class, 'index'])->name('avatar');
     Route::get('/avatar/purchase/{avatar_id}', [AvatarController::class, 'purchase'])->name('avatar.purchase');
     Route::get('/remove-profile', [AvatarController::class, 'remove_profile'])->name('remove-profile');
+    Route::get('/restore-profile', [AvatarController::class, 'restore_profile'])->name('restore-profile');
 });
 
 Route::get('/set-locale/{locale}', function ($locale) {

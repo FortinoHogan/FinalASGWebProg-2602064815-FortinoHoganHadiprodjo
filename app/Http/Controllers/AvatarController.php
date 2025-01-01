@@ -18,8 +18,9 @@ class AvatarController extends Controller
 
         $notifications = Notification::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
         $avatars = Avatar::get();
+        $transactions = Transaction::where('user_id', $user->id)->get();
 
-        return view('pages.avatar', compact('user', 'notifications', 'avatars'));
+        return view('pages.avatar', compact('user', 'notifications', 'avatars', 'transactions'));
     }
 
     public function purchase($avatar_id)
@@ -39,11 +40,11 @@ class AvatarController extends Controller
             $user->profile_picture = $avatar->image;
             $user->save();
 
-            return redirect()->back()->with('success', 'Profile picture updated successfully!');
+            return redirect()->back()->with('success', __('lang.profile_updated'));
         }
 
         if ($user->coins < $avatar->price) {
-            return redirect()->back()->with('error', 'Not enough coins to purchase this avatar.');
+            return redirect()->back()->with('error', __('lang.not_enough_coins'));
         }
         $user->coins -= $avatar->price;
         $user->save();
@@ -56,31 +57,41 @@ class AvatarController extends Controller
         $user->profile_picture = $avatar->image;
         $user->save();
 
-        return redirect()->back()->with('success', 'Avatar purchased and profile picture updated!');
+        return redirect()->back()->with('success', __('lang.avatar_purchased'));
     }
 
-    public function remove_profile(Request $request)
+    public function remove_profile()
     {
         $user = User::find(Auth::user()->id);
-        $isRemoving = $request->input('remove', true);
 
-        $cost = $isRemoving ? 50 : 5;
+        $cost = 50;
         if ($user->coins < $cost) {
-            return redirect()->back()->withErrors(['message' => __('lang.not_enough_coins')]);
+            return redirect()->back()->with('error', __('lang.not_enough_coin_to_remove'));
         }
         $user->coins -= $cost;
 
-        if ($isRemoving) {
-            $bearAvatar = Avatar::whereBetween('id', [1, 3])->inRandomOrder()->first();
-            $user->profile_picture = $bearAvatar->image;
-            $user->is_visible = false;
-        } else {
-            $user->visible = true;
-            $user->profile_picture = $user->original_picture;
-        }
+        $bearAvatar = Avatar::whereBetween('id', [1, 3])->inRandomOrder()->first();
+        $user->profile_picture = $bearAvatar->image;
+        $user->is_visible = false;
 
         $user->save();
 
-        return redirect()->back()->with('success', $isRemoving ? __('lang.profile_removed') : __('lang.profile_restored'));
+        return redirect()->back()->with('success',  __('lang.profile_removed'));
+    }
+
+    public function restore_profile()
+    {
+        $user = User::find(Auth::user()->id);
+        
+        $cost = 5;
+        if ($user->coins < $cost) {
+            return redirect()->back()->with('error', __('lang.not_enough_coin_to_restore'));
+        }
+
+        $user->coins -= $cost;
+        $user->is_visible = true;
+        $user->profile_picture = null;
+        $user->save();
+        return redirect()->back()->with('success', __('lang.profile_restored'));
     }
 }

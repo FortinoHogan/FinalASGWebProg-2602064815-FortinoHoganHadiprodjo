@@ -58,5 +58,13 @@ return [
     'done' => 'Selesai',
     'change_profile_picture' => 'Ubah Foto Profil',
     'remove_profile' => 'Hapus Profil',
+    'restore_profile' => 'Kembalikan Profil',
+    'profile_updated' => 'Foto profil berhasil diubah!',
+    'not_enough_coins' => 'Koin tidak mencukupi untuk membeli avatar ini.',
+    'avatar_purchased' => 'Avatar dibeli dan foto profil berhasil diubah!',
+    'profile_removed' => 'Foto profil berhasil dihapus!',
+    'profile_restored' => 'Foto profil berhasil dikembalikan!',
+    'not_enough_coin_to_remove' => 'Koin tidak mencukupi untuk menghapus foto profil.',
+    'not_enough_coin_to_restore' => 'Koin tidak mencukupi untuk mengembalikan foto profil.',
     'logout' => 'Keluar',
 ];

@@ -71,8 +71,11 @@
         @foreach ($users as $u)
             @if (!Auth::check())
                 <a href="{{ route('login') }}" class="card col text-decoration-none" style="width: 16rem;">
-                    <img src="{{ $u->profile_picture ?? asset('assets/img/profile.png') }}"
-                        class="card-img-top cursor-pointer" alt="...">
+                    <div class="d-flex justify-content-center p-3">
+                        <img src="{{ $u->profile_picture ? 'data:image/jpeg;base64,' . base64_encode($u->profile_picture) : asset('assets/img/profile.png') }}"
+                            class="card-img-top cursor-pointer" alt="..."
+                            style="width: 150px; height: 150px; border-radius: 100%; border: 2px solid; padding: 10px; object-fit: scale-down; object-position: top">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ Str::limit($u->name, 18, '...') }}</h5>
                         <h6>{{ $u->profession->name }}</h6>
@@ -86,8 +89,11 @@
                 </a>
             @elseif ($u->id != auth()->user()->id)
                 <div class="card col" style="width: 16rem;">
-                    <img src="{{ $u->profile_picture ?? asset('assets/img/profile.png') }}"
-                        class="card-img-top cursor-pointer" alt="...">
+                    <div class="d-flex justify-content-center p-3">
+                        <img src="{{ $u->profile_picture ? 'data:image/jpeg;base64,' . base64_encode($u->profile_picture) : asset('assets/img/profile.png') }}"
+                            class="card-img-top cursor-pointer" alt="..."
+                            style="width: 150px; height: 150px; border-radius: 100%; border: 2px solid; padding: 10px; object-fit: scale-down; object-position: top">
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ Str::limit($u->name, 18, '...') }}</h5>
                         <h6>{{ $u->profession->name }}</h6>
@@ -137,7 +143,8 @@
     <div class="d-flex justify-content-center">
         {{ $users->links() }}
     </div>
-    <a href="{{ route('chat') }}" class="bg-white position-fixed p-3 shadow-lg" style="border-radius: 100%; bottom: 20px; right: 20px; cursor: pointer;">
+    <a href="{{ route('chat') }}" class="bg-white position-fixed p-3 shadow-lg"
+        style="border-radius: 100%; bottom: 20px; right: 20px; cursor: pointer;">
         <i class="fa-regular fa-comments" style="font-size: 1.5rem;"></i>
     </a>
 @endsection

@@ -17,8 +17,11 @@
                             <img src="data:image/jpeg;base64,{{ base64_encode($avatar->image) }}" alt="Avatar Image"
                                 class="card-img-top mx-auto rounded-circle"
                                 style="width: 100px; height: 100px; object-fit: contain; border: 2px solid #ddd;">
-                            <div class="card-body">
-                                <p class="card-text fw-bold">{{ $avatar->price }} Coin</p>
+                            <div class="card-body d-flex items-center justify-content-center gap-2">
+                                <p class="card-text fw-bold mb-0">{{ $avatar->price }} Coin</p>
+                                @if ($transactions->contains('avatar_id', $avatar->id))
+                                    <p class="card-text fw-bold text-success mb-0">(Purchased)</p>
+                                @endif
                             </div>
                         </div>
                     </a>

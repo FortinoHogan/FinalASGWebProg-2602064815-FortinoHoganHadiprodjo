@@ -58,5 +58,13 @@ return [
     'done' => 'Done',
     'change_profile_picture' => 'Change Profile Picture',
     'remove_profile' => 'Remove Profile',
+    'restore_profile' => 'Restore Profile',
+    'profile_updated' => 'Profile picture updated successfully!',
+    'not_enough_coin' => 'Not enough coins to purchase this avatar.',
+    'avatar_purchased' => 'Avatar purchased and profile picture updated!',
+    'profile_removed' => 'Profile picture removed successfully!',
+    'profile_restored' => 'Profile picture restored successfully!',
+    'not_enough_coin_to_remove' => 'Not enough coins to remove profile picture.',
+    'not_enough_coin_to_restore' => 'Not enough coins to restore profile picture.',
     'logout' => 'Logout',
 ];

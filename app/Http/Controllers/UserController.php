@@ -22,7 +22,7 @@ class UserController extends Controller
         $searchQuery = request('search');
         $genderFilters = request('gender', []);
         $fieldFilters = request('field', []);
-        $usersQuery = User::query();
+        $usersQuery = User::query()->where('is_visible', 1);
 
         if (Auth::check()) {
             $usersQuery->where('id', '!=', Auth::user()->id);
