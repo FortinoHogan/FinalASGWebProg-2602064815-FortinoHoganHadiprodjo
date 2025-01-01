@@ -42,9 +42,11 @@
                                     <li>
                                         <a class="dropdown-item {{ $notification->is_read ? 'text-muted' : 'text-black' }} d-flex  gap-2"
                                             href="{{ route('friends') }}" onclick="markAsRead({{ $notification->id }})">
-                                            <img src="{{ $notification->sender->profile_picture ?? asset('assets/img/profile.png') }}"
+                                            <img src="{{ $notification->sender->profile_picture
+                                                ? 'data:image/jpeg;base64,' . base64_encode($notification->sender->profile_picture)
+                                                : asset('assets/img/profile.png') }}"
                                                 alt=""
-                                                style="width: 50px; border-radius: 100%; border: 2px solid; padding: 5px">
+                                                style="width: 50px; height: 50px; border-radius: 100%; border: 2px solid; padding: 5px; object-fit: scale-down; object-position: top">
                                             <div class="d-flex flex-column gap-0">
                                                 <p class="mb-0">
                                                     {{ $notification->sender->name }}
@@ -62,9 +64,11 @@
                                     <li>
                                         <a class="dropdown-item {{ $notification->is_read ? 'text-muted' : '' }} d-flex  gap-2"
                                             href="{{ route('chat') }}" onclick="markAsRead({{ $notification->id }})">
-                                            <img src="{{ $notification->sender->profile_picture ?? asset('assets/img/profile.png') }}"
+                                            <img src="{{ $notification->sender->profile_picture
+                                                ? 'data:image/jpeg;base64,' . base64_encode($notification->sender->profile_picture)
+                                                : asset('assets/img/profile.png') }}"
                                                 alt=""
-                                                style="width: 50px; border-radius: 100%; border: 2px solid; padding: 5px">
+                                                style="width: 50px; height: 50px; border-radius: 100%; border: 2px solid; padding: 5px; object-fit: scale-down; object-position: top">
                                             <div class="d-flex flex-column gap-0">
                                                 <p class="mb-0">
                                                     {{ $notification->sender->name }}
